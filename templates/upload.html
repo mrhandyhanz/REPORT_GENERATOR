@@ -1,1 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Assessment Data</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .upload-container {
+            max-width: 500px;
+            margin: 50px auto;
+            text-align: center;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #f9f9f9;
+            border-top: 10px solid #1f4e79;
+        }
+
+        .upload-container input[type="file"] {
+            display: block;
+            margin: 20px auto;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 80%;
+        }
+
+        .upload-container button {
+            background-color: #1f4e79;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 85%;
+        }
+
+        .upload-container button:hover {
+            background-color: #153859;
+        }
+
+        .message {
+            margin-top: 20px;
+            color: green;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="upload-container">
+        <img src="{{ url_for('static', filename='icrp_logo.png') }}" width="80" class="upload-logo" alt="ICRP Logo">
+        <h2>Upload Assessment Data</h2>
+        <p>Please upload the student assessment Excel file to generate the HTML reports.</p>
+        <form method="POST" enctype="multipart/form-data">
+            <label for="file-upload">Upload Excel File</label>
+            <input type="file" id="file-upload" name="file" accept=".xlsx, .xls" required>
+            <button type="submit">Generate HTML Reports</button>
+        </form>
+    </div>
+</body>
+
+</html>
