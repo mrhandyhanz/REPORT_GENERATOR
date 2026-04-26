@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports Dashboard</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <style>
+        .dashboard-container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            background-color: #f9f9f9;
+            border-top: 10px solid #1f4e79;
+        }
+
+        .report-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        .report-item {
+            background: white;
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .report-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .view-btn {
+            background-color: #1f4e79;
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .view-btn:hover {
+            background-color: #153859;
+        }
+
+        .nav-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #1f4e79;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .nav-link:hover {
+            text-decoration: underline;
+        }
+
+        .dashboard-title {
+            text-align: center;
+            color: #1f4e79;
+        }
+
+        .dashboard-empty {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <a href="/" class="nav-link">&larr; Back to Upload</a>
+        <h2 class="dashboard-title">Generated Reports Dashboard</h2>
+
+        {% if reports %}
+        <ul class="report-list">
+            {% for filename in reports %}
+            <li class="report-item">
+                <span class="report-name">{{ filename.replace('.html', '').replace('_', ' ') }}</span>
+                <a href="/reports/{{ filename }}" class="view-btn" target="_blank">View Report</a>
+            </li>
+            {% endfor %}
+        </ul>
+        {% else %}
+        <p class="dashboard-empty">No reports have been generated yet.</p>
+        {% endif %}
+    </div>
+</body>
+
+</html>
