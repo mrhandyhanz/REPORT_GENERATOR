@@ -1,1 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ICRP Assessment Report</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+
+<body>
+
+    <div class="container">
+        
+        <!-- ACTION BUTTONS -->
+        <div class="no-print print-btn-container">
+            <button onclick="window.print()" class="print-btn">Save as PDF</button>
+        </div>
+
+        <!-- HEADER -->
+        <div class="header">
+            <img src="{{ url_for('static', filename='icrp_logo.png') }}" class="logo left-logo" alt="ICRP+ Logo">
+            <div class="title">
+                <img src="../static/Netzah.png" class="center-logo" alt="Netzah Logo">
+                <h1>ASSESSMENT REPORT</h1>
+            </div>
+            <img src="{{ url_for('static', filename='blis_global.png') }}" class="logo right-logo"
+                alt="Blis Global Logo">
+        </div>
+
+        <!-- STUDENT INFO -->
+        <div class="info">
+            <p><strong>NAME :</strong> {{ name }}</p>
+            <p><strong>CLASS :</strong> {{ student_class }}</p>
+        </div>
+
+        <!-- TABLE -->
+        <table>
+            <tr>
+                <th>ASSESSMENT COMPONENT</th>
+                <th>MAXIMUM RESULTS</th>
+                <th>MARKS OBTAINED</th>
+                <th>PERCENTAGE (%)</th>
+            </tr>
+
+            <tr>
+                <td>ONLINE ASSESSMENT</td>
+                <td>50</td>
+                <td>{{ online }}</td>
+                <td>{{ online_percent }}%</td>
+            </tr>
+
+            <tr>
+                <td>PHYSICAL EXAM</td>
+                <td>50</td>
+                <td>{{ physical }}</td>
+                <td>{{ physical_percent }}%</td>
+            </tr>
+
+            <tr class="total">
+                <td>TOTAL</td>
+                <td>100</td>
+                <td>{{ total }}</td>
+                <td>{{ total }}%</td>
+            </tr>
+        </table>
+
+        <!-- COMMENT -->
+        <div class="comment-box">
+            <p><strong>COMMENT</strong></p>
+            <div class="comment-text">{{ comment }}</div>
+        </div>
+
+        <!-- SIGNATURE -->
+        <div class="signature">
+            <p>_________________________</p>
+            <p>TECHNICAL REPRESENTATIVE</p>
+        </div>
+
+    </div>
+
+</body>
+
+</html>
