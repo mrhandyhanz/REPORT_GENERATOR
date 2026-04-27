@@ -14,7 +14,7 @@ REPORT_FOLDER = "reports"
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(REPORT_FOLDER, exist_ok=True)
 
-@app.route("/")
+@app.route("/", methods=["GET", "POST"])
 def index():
     if request.method == "POST":
         if "file" not in request.files:
