@@ -4,18 +4,17 @@ import pandas as pd
 import os
 import gc
 import shutil
+
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024  # Limits uploads to 5MB
+
 UPLOAD_FOLDER = "uploads"
 REPORT_FOLDER = "reports"
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(REPORT_FOLDER, exist_ok=True)
 
-@app.route("/test-image")
-def test_image():
-    return '<img src="/static/icrp_logo.png">'
-@app.route("/", methods=["GET", "POST"])
+@app.route("/")
 def index():
     if request.method == "POST":
         if "file" not in request.files:
@@ -30,12 +29,14 @@ def index():
             path = os.path.join(UPLOAD_FOLDER, filename)
             
             try:
-                # Put file save INSIDE the try block to catch PermissionErrors
                 file.save(path)
                 df = pd.read_excel(path)
-if os.path.exists(REPORT_FOLDER):
-    shutil.rmtree(REPORT_FOLDER)
-os.makedirs(REPORT_FOLDER, exist_ok=True)
+
+                # CLEANUP: Delete old reports before making new ones
+                if os.path.exists(REPORT_FOLDER):
+                    shutil.rmtree(REPORT_FOLDER)
+                os.makedirs(REPORT_FOLDER, exist_ok=True)
+
                 for _, row in df.iterrows():
                     student_name = str(row.get("Name", "Unknown_Student"))
                     out_filename = student_name.replace(" ", "_") + ".html"
@@ -51,7 +52,7 @@ os.makedirs(REPORT_FOLDER, exist_ok=True)
                     rendered_html = render_template(
                         "report.html",
                         name=student_name,
-                        student_class=row.get('Class', 'Unknown'),  # ✅ FIXED
+                        student_class=row.get('Class', 'Unknown'),
                         online=online,
                         online_percent=online_percent,
                         physical=physical,
@@ -63,12 +64,15 @@ os.makedirs(REPORT_FOLDER, exist_ok=True)
                     with open(filepath, "w", encoding="utf-8") as f:
                         f.write(rendered_html)
 
+                # MEMORY MANAGEMENT: Clear data from RAM after processing
+                del df
+                gc.collect()
+
                 return "HTML Reports Generated Successfully! <br><br> <a href='/dashboard' style='padding: 10px 20px; background: #1f4e79; color: white; text-decoration: none; border-radius: 5px;'>Go to Dashboard</a>"
+            
             except Exception as e:
-                # Catch ALL errors during save, read, or generation
                 return f"Error processing file: {str(e)}"
-    del df  # Delete the data frame from memory
-    gc.collect()  # Force Python to clear unused memory
+
     return render_template("upload.html")
 
 @app.route("/dashboard")
