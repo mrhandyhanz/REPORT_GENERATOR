@@ -2,9 +2,10 @@ from flask import Flask, render_template, request, send_from_directory
 from werkzeug.utils import secure_filename
 import pandas as pd
 import os
-
+import gc
+import shutil
 app = Flask(__name__)
-
+app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024  # Limits uploads to 5MB
 UPLOAD_FOLDER = "uploads"
 REPORT_FOLDER = "reports"
 
@@ -32,7 +33,9 @@ def index():
                 # Put file save INSIDE the try block to catch PermissionErrors
                 file.save(path)
                 df = pd.read_excel(path)
-
+if os.path.exists(REPORT_FOLDER):
+    shutil.rmtree(REPORT_FOLDER)
+os.makedirs(REPORT_FOLDER, exist_ok=True)
                 for _, row in df.iterrows():
                     student_name = str(row.get("Name", "Unknown_Student"))
                     out_filename = student_name.replace(" ", "_") + ".html"
@@ -64,7 +67,8 @@ def index():
             except Exception as e:
                 # Catch ALL errors during save, read, or generation
                 return f"Error processing file: {str(e)}"
-
+    del df  # Delete the data frame from memory
+    gc.collect()  # Force Python to clear unused memory
     return render_template("upload.html")
 
 @app.route("/dashboard")
