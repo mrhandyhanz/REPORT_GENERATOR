@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Student Reports</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&family=DM+Mono&display=swap"
+    rel="stylesheet" />
+  <style>
+    :root {
+      --primary: #ffffff;
+      --primary-hover: #f8fafc;
+      --accent: #1f4e79;
+      --accent-light: #2b6cb0;
+      --accent-hover: #163857;
+      --ink: #1e293b;
+      --cream: #f0f4f8;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --white: #ffffff;
+      --danger: #ef4444;
+      --success: #10b981;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      color: var(--ink);
+    }
+
+    /* ── Screen-only toolbar ── */
+    @media screen {
+      .toolbar {
+        background: var(--ink);
+        padding: 14px 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: sticky;
+        top: 0;
+        z-index: 50;
+      }
+
+      .toolbar-left {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .logo-mark {
+        height: 32px;
+        min-width: 32px;
+        background: transparent;
+        border: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .logo-mark img {
+        width: auto;
+        height: 100%;
+        max-width: 150px;
+        object-fit: contain;
+      }
+
+      .toolbar h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 18px;
+        color: var(--white);
+      }
+
+      .toolbar-right {
+        display: flex;
+        gap: 12px;
+      }
+
+      .btn {
+        padding: 9px 20px;
+        border-radius: 7px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        border: none;
+        transition: all .2s;
+      }
+
+      .btn-ghost {
+        background: transparent;
+        color: #aaa;
+        border: 1px solid #444;
+      }
+
+      .btn-ghost:hover {
+        color: var(--white);
+        border-color: #888;
+      }
+
+      .btn-accent {
+        background: var(--accent);
+        color: var(--white);
+      }
+
+      .btn-accent:hover {
+        background: var(--accent-hover);
+      }
+
+      .meta-bar {
+        background: var(--cream);
+        border-bottom: 1px solid var(--border);
+        padding: 14px 40px;
+        display: flex;
+        align-items: center;
+        gap: 32px;
+        flex-wrap: wrap;
+      }
+
+      .meta-item {
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .meta-item strong {
+        color: var(--ink);
+      }
+
+      .report-nav {
+        background: var(--white);
+        border-bottom: 1px solid var(--border);
+        padding: 0 40px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        overflow-x: auto;
+      }
+
+      .nav-btn {
+        padding: 12px 16px;
+        font-size: 13px;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        white-space: nowrap;
+        color: var(--muted);
+        border-bottom: 2px solid transparent;
+        transition: all .2s;
+        font-family: 'DM Sans', sans-serif;
+      }
+
+      .nav-btn:hover {
+        color: var(--ink);
+      }
+
+      .nav-btn.active {
+        color: var(--accent);
+        border-bottom-color: var(--accent);
+        font-weight: 500;
+      }
+
+      .reports-wrapper {
+        padding: 48px 40px;
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+    }
+
+    /* ── Individual report card ── */
+    .report-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 0;
+      margin-bottom: 48px;
+      box-shadow: 0 4px 32px rgba(0, 0, 0, .10);
+      overflow: hidden;
+      page-break-after: always;
+    }
+
+    /* Gold accent top bar */
+    .report-accent {
+      height: 6px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-light));
+    }
+
+    /* School header */
+    .report-header {
+      padding: 32px 40px 24px;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .school-info h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      letter-spacing: .3px;
+    }
+
+    .school-info p {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 3px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .report-badge {
+      background: var(--accent);
+      color: var(--white);
+      padding: 8px 18px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    /* Student info section */
+    .student-section {
+      padding: 28px 40px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .info-block {
+      padding-right: 40px;
+    }
+
+    .info-block:last-child {
+      padding-right: 0;
+      border-left: 1px solid var(--border);
+      padding-left: 40px;
+    }
+
+    .info-row {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .info-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--muted);
+      min-width: 90px;
+    }
+
+    .info-value {
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    .reg-mono {
+      font-family: 'DM Mono', monospace;
+      font-size: 14px;
+      background: var(--cream);
+      padding: 2px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+
+    /* Scores section */
+    .scores-section {
+      padding: 28px 40px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-title {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 18px;
+    }
+
+    .scores-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+
+    .score-box {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .score-box::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+    }
+
+    .score-box.online::before {
+      background: #5b9bd5;
+    }
+
+    .score-box.physical::before {
+      background: #70ad47;
+    }
+
+    .score-box.total::before {
+      background: var(--accent);
+    }
+
+    .score-box .score-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .score-box .score-value {
+      font-family: 'Playfair Display', serif;
+      font-size: 38px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .score-box.total .score-value {
+      color: var(--accent);
+    }
+
+    .score-box .score-sub {
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    /* Grade badge */
+    .grade-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 18px;
+    }
+
+    .grade-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 18px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .grade-A-plus {
+      background: #fff8e7;
+      border: 1.5px solid #f0c842;
+      color: #b8860b;
+    }
+
+    .grade-A {
+      background: #f0fff4;
+      border: 1.5px solid #68d391;
+      color: #276749;
+    }
+
+    .grade-B {
+      background: #ebf8ff;
+      border: 1.5px solid #63b3ed;
+      color: #2b6cb0;
+    }
+
+    .grade-C {
+      background: #f0f4ff;
+      border: 1.5px solid #7f9cf5;
+      color: #434190;
+    }
+
+    .grade-D {
+      background: #fffaf0;
+      border: 1.5px solid #f6ad55;
+      color: #c05621;
+    }
+
+    .grade-F {
+      background: #fff5f5;
+      border: 1.5px solid #fc8181;
+      color: #c53030;
+    }
+
+    .position-badge {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .position-badge strong {
+      color: var(--ink);
+    }
+
+    /* Progress bar */
+    .progress-track {
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      margin-top: 18px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-light));
+      transition: width .8s ease;
+    }
+
+    /* Comment section */
+    .comment-section {
+      padding: 24px 40px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .comment-box {
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--accent);
+      padding: 14px 18px;
+      font-size: 14px;
+      color: var(--ink);
+      line-height: 1.6;
+      border-radius: 0 6px 6px 0;
+      font-style: italic;
+    }
+
+    /* Signature footer */
+    .report-footer {
+      padding: 24px 40px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+    }
+
+    .sig-block {
+      text-align: center;
+    }
+
+    .sig-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 16px;
+      font-style: italic;
+      padding-bottom: 4px;
+      border-bottom: 1.5px solid var(--ink);
+      margin-bottom: 4px;
+      min-width: 160px;
+    }
+
+    .sig-label {
+      font-size: 10px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .footer-stamp {
+      font-size: 10px;
+      color: var(--muted);
+      text-align: right;
+      line-height: 1.8;
+    }
+
+    /* Empty / loading states */
+    .empty-state {
+      text-align: center;
+      padding: 80px 40px;
+      color: var(--muted);
+    }
+
+    .empty-state h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      margin-bottom: 10px;
+      color: var(--ink);
+    }
+
+    /* ── Print styles ── */
+    @media print {
+
+      .toolbar,
+      .meta-bar,
+      .report-nav {
+        display: none !important;
+      }
+
+      body {
+        background: white;
+      }
+
+      .reports-wrapper {
+        padding: 0;
+        max-width: none;
+      }
+
+      .report-card {
+        box-shadow: none;
+        margin-bottom: 0;
+        border: none;
+        border-top: 1px solid #ddd;
+      }
+
+      .report-card:first-child {
+        border-top: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="toolbar" id="toolbar">
+    <div class="toolbar-left">
+      <div class="logo-mark">
+        <img src="{{ url_for('static', filename='icrp_logo.png') }}" alt="ICRP Logo">
+      </div>
+      <h1>SnapReport</h1>
+    </div>
+    <div class="toolbar-right">
+      <button class="btn btn-ghost" onclick="window.location='/'">← Back</button>
+      <button class="btn btn-accent" onclick="window.print()">🖨 Print All Reports</button>
+    </div>
+  </div>
+
+  <div class="meta-bar" id="metaBar">
+    <div class="meta-item">School: <strong id="metaSchool">—</strong></div>
+    <div class="meta-item">Grade: <strong id="metaGrade">—</strong></div>
+    <div class="meta-item">Term: <strong id="metaTerm">—</strong></div>
+    <div class="meta-item">Students: <strong id="metaCount">—</strong></div>
+    <div class="meta-item">Generated: <strong id="metaDate">—</strong></div>
+  </div>
+
+  <div class="report-nav" id="reportNav"></div>
+
+  <div class="reports-wrapper" id="reportsWrapper">
+    <div class="empty-state">
+      <div class="empty-state-icon">📋</div>
+      <h3>Loading Reports…</h3>
+      <p>Please wait while we prepare the student reports.</p>
+    </div>
+  </div>
+
+  <script>
+    function gradeClass(g) {
+      return 'grade-' + g.replace('+', '-plus');
+    }
+
+    function buildReport(student, meta) {
+      const [score, desc] = student.score;
+      const pct = Math.min(100, Math.round((student.total / 100) * 100));
+
+      return `
+    <div class="report-card" id="report-${student.reg_no.replace(/\s+/g, '_')}">
+      <div class="report-accent"></div>
+
+      <div class="report-header">
+        <div class="school-info">
+          <h2>${meta.school_name}</h2>
+          <p>INTEGRATED CODING AND PROGRAMMING PLUS (ICRP) PROGRESS REPORT</p>
+          <p>${meta.term} ${meta.year}</p>
+        </div>
+        <div class="school-badge" style="display: flex; align-items: center; gap: 20px;">
+          <img src="/static/icrp_logo.png" alt="ICRP Logo" style="height: 64px; width: auto; object-fit: contain;">
+          <img src="/static/netzah.jpeg" alt="Netzah Badge" style="height: 64px; width: auto; object-fit: contain;">
+        </div>
+      </div>
+
+      <div class="student-section">
+        <div class="info-block">
+          <div class="info-row">
+            <span class="info-label">Full Name</span>
+            <span class="info-value">${student.name}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Reg. No.</span>
+            <span class="info-value reg-mono">${student.reg_no}</span>
+          </div>
+        </div>
+        <div class="info-block">
+          <div class="info-row">
+            <span class="info-label">Grade</span>
+            <span class="info-value">${student.grade}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Academic Year</span>
+            <span class="info-value">${meta.year}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="scores-section">
+        <div class="section-title">Performance Summary</div>
+        <div class="scores-grid">
+          <div class="score-box online">
+            <div class="score-label">Online Assessment</div>
+            <div class="score-value">${student.online_assessment}</div>
+            <div class="score-sub">marks</div>
+          </div>
+          <div class="score-box physical">
+            <div class="score-label">Physical Exam</div>
+            <div class="score-value">${student.physical_exam}</div>
+            <div class="score-sub">marks</div>
+          </div>
+          <div class="score-box total">
+            <div class="score-label">Total Score</div>
+            <div class="score-value">${student.total}</div>
+            <div class="score-sub">out of 100</div>
+          </div>
+        </div>
+
+        <div class="grade-row">
+          <span class="grade-pill ${gradeClass(score)}">
+            <strong>${score}</strong> — ${desc}
+          </span>
+        </div>
+
+        <div class="progress-track">
+          <div class="progress-fill" style="width: ${pct}%"></div>
+        </div>
+      </div>
+
+      ${student.comment ? `
+      <div class="comment-section">
+        <div class="section-title">Teacher's Comment</div>
+        <div class="comment-box">${student.comment}</div>
+      </div>` : ''}
+
+      <div class="report-footer">
+        <div class="sig-block">
+          <div class="sig-name" style="display: flex; justify-content: center; align-items: flex-end; height: 60px;">
+            <img src="${student.signature}" alt="Signature" style="max-height: 60px; width: auto; object-fit: contain;">
+          </div>
+          <div class="sig-label">TECHNICAL REPRESENTATIVE</div>
+        </div>
+        <div class="footer-stamp">
+        ${meta.school_name} · ${meta.term} ${meta.year}
+        </div>
+      </div>
+    </div>`;
+    }
+
+    function init() {
+      const raw = sessionStorage.getItem('reportData');
+      if (!raw) {
+        document.getElementById('reportsWrapper').innerHTML = `
+        <div class="empty-state">
+          <div style="font-size:48px;margin-bottom:16px">⚠️</div>
+          <h3>No Report Data Found</h3>
+          <p>Please go back and upload an Excel file first.</p>
+          <br><a href="/" style="color:var(--accent)">← Back to Upload</a>
+        </div>`;
+        return;
+      }
+
+      const data = JSON.parse(raw);
+      const { students, meta } = data;
+
+      // Meta bar
+      document.getElementById('metaBar').style.display = 'flex';
+      document.getElementById('metaSchool').textContent = meta.school_name;
+      document.getElementById('metaGrade').textContent = meta.grade;
+      document.getElementById('metaTerm').textContent = `${meta.term} ${meta.year}`;
+      document.getElementById('metaCount').textContent = `${meta.total_students} students`;
+      document.getElementById('metaDate').textContent = meta.generated_at;
+
+      // Nav
+      const nav = document.getElementById('reportNav');
+      students.forEach(s => {
+        const btn = document.createElement('button');
+        btn.className = 'nav-btn';
+        btn.textContent = s.name.split(' ')[0];
+        btn.onclick = () => {
+          document.querySelector(`#report-${s.reg_no.replace(/\s+/g, '_')}`).scrollIntoView({ behavior: 'smooth', block: 'start' });
+          document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+        };
+        nav.appendChild(btn);
+      });
+
+      // Reports
+      const wrapper = document.getElementById('reportsWrapper');
+      wrapper.innerHTML = students.map(s => buildReport(s, meta)).join('');
+    }
+
+    init();
+  </script>
+</body>
+
+</html>
