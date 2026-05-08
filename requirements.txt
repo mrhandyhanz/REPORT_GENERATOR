@@ -1,4 +1,6 @@
-flask
+Flask
+gunicorn
 pandas
 openpyxl
-gunicorn
+xlsxwriter
+Werkzeug
