@@ -109,11 +109,11 @@ def upload():                                  # Fixed: was 'index' (duplicate n
 
 
 def get_score(total):
-    if total >= 90: return ('A+', 'Distinction')
+    if total >= 90: return ('A+', 'SuperB')
     if total >= 80: return ('A', 'Excellent')
     if total >= 70: return ('B', 'Very Good')
     if total >= 60: return ('C', 'Good')
-    if total >= 50: return ('D', 'Average')
+    if total >= 40: return ('D', 'Average')
     return ('F', 'Below Average')
 
 @app.route('/report')
