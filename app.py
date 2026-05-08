@@ -8,8 +8,18 @@ import mimetypes
 mimetypes.add_type('text/css', '.css')
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = 'uploads'
-app.config['REPORTS_FOLDER'] = 'reports'
+
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+
+UPLOAD_FOLDER = os.path.join(BASE_DIR, 'uploads')
+REPORTS_FOLDER = os.path.join(BASE_DIR, 'reports')
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['REPORTS_FOLDER'] = REPORTS_FOLDER
+
+# Create folders automatically
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+os.makedirs(REPORTS_FOLDER, exist_ok=True)
 
 REQUIRED_COLUMNS = ['NAME', 'REG NO', 'GRADE', 'COMMENT', 'ONLINE ASSESSMENT', 'PHYSICAL EXAM', 'TOTAL', 'SIGNATURE']
 
@@ -111,6 +121,4 @@ def report_page():
     return render_template('report.html')
 
 if __name__ == '__main__':
-    os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
-    os.makedirs(app.config['REPORTS_FOLDER'], exist_ok=True)
     app.run(debug=True, port=5000)
